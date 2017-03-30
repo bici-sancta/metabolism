@@ -263,7 +263,6 @@ __xi. A histogram of residuals with normal distribution superimposed.  (from SAS
 
 ``` {r, echo = FALSE}
 
-
 res_mean <- mean(yyy_res)
 res_std <- sqrt(var(yyy_res))
 
@@ -280,5 +279,8 @@ curve(dnorm(x, mean = res_mean, sd = res_std),
 ```
 
 And the SAS plots ...
+
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-  
 
   
