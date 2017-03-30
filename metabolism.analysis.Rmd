@@ -13,7 +13,7 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Meatabolism - Analysis
+## Metabolism - Analysis
 
 ```{r metabolism}
 
@@ -34,7 +34,7 @@ s26$m34 <- s26$Mass^exp
 str(s26)
 
 plot(s26$Metab ~ s26$Mass)
-plot(s26$Metab ~ s26$m34)
+plot(s26$Metab ~ s26$m34, log = "x")
 plot(s26$Metab ~ s26$m34, xlim=c(0,100))
 
 # ... define data set to analyze 
@@ -46,7 +46,7 @@ str(df_xy)
 
 ```
 
-### Homework 11 - Problem Set 1 - Black Wheatears
+### Homework 11 - Problem Set 1 - Metabolism
 
 #### b. Analyze the data providing at least the following:    
 
@@ -130,7 +130,7 @@ print_cnf_intrvl <- paste0(sprintf("(%9.3f", cnf_intrvl_lwr), sprintf(", %9.3f)"
 3 : t = `r t_value `    
 4 : p_value = `r p_value` < 0.05 ?    
 5: `r acc_rej`  
-6 : There `r is_is_not` sufficient evidence to suggest at the alpha = `r alpha` level of significance (p-value = `r p_value`) that the slope of the regression line that estimates the T cell for Black Wheatears based on the xxx of the birds `r is_is_not` equal to zero. A `r (1 - alpha)*100`% confidence interval for the slope is `r print_cnf_intrvl`, which is an interval that `r does_does_not` contain the value zero  
+6 : There `r is_is_not` sufficient evidence to suggest at the alpha = `r alpha` level of significance (p-value = `r p_value`) that the slope of the regression line that estimates the T cell for Metabolism based on the xxx of the birds `r is_is_not` equal to zero. A `r (1 - alpha)*100`% confidence interval for the slope is `r print_cnf_intrvl`, which is an interval that `r does_does_not` contain the value zero  
   
 
 ##### __Six-Step Hypothesis Test - Intercept__   
@@ -168,7 +168,7 @@ print_cnf_intrvl <- paste0(sprintf("(%9.3f", cnf_intrvl_lwr), sprintf(", %9.3f)"
 3 : t = `r t_value `    
 4 : p_value = `r p_value` < 0.05 ?    
 5: `r acc_rej`  
-6 : There `r is_is_not` sufficient evidence to suggest at the alpha = `r alpha` level of significance (p-value = `r p_value`) that the intercept of the regression line that estimates the T cell for Black Wheatears based on the xxx of the birds is not equal to zero. A `r (1 - alpha)*100`% confidence interval for the slope is `r print_cnf_intrvl`, which is an interval that `r does_does_not` contain the value zero  
+6 : There `r is_is_not` sufficient evidence to suggest at the alpha = `r alpha` level of significance (p-value = `r p_value`) that the intercept of the regression line that estimates the T cell for Metabolism based on the xxx of the birds is not equal to zero. A `r (1 - alpha)*100`% confidence interval for the slope is `r print_cnf_intrvl`, which is an interval that `r does_does_not` contain the value zero  
   
 
 
@@ -238,173 +238,6 @@ __And the SAS table__ ...
 
 
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-  
-__viii. Using the graphical method, find and interpret the calibration intervals for the t-cell response of 0.3. (Both for mean t-cell response and for a single t-cell response.   Please do in SAS and R!  (R: package investr)__  
-
-``` {r, echo = FALSE}
-
-# ... create data frame with equal interval x-axis values
-
-df_xxx <- as.data.frame(seq(from = -4, to = 20, by = 0.1))
-names(df_xxx) <- "xxx"
-
-plot(df_xy$yyy ~ df_xy$xxx,
-	 col = 'blue',
-	 pch = 1,
-	 xlim = c(-2, 14),
-	 ylim = c(0.0, 0.6)
-	 )
-
-abline(v = seq(-2, 14, 0.2), col = "gray", lty = 3)
-
-polygon(c(df_xy$xxx, rev(df_xy$xxx)),
-		c(df_xy_conf_int$lwr, rev(df_xy_conf_int$upr)),col="lightgrey")
-
-lines(fit_all$fitted.values ~ df_xy$xxx, col = 'black', lwd = 4, lty = 3)
-
-lines(df_xy_conf_int$lwr ~ df_xy$xxx, col = 'black', lwd = 1)
-lines(df_xy_conf_int$upr ~ df_xy$xxx, col = 'black', lwd = 1)
-
-points(df_xy$yyy ~ df_xy$xxx, col = 'blue', pch = 1, ylim = c(0, 0.6))
-
-df_xy_pred_int <- as.data.frame(predict(fit_all, df_xxx, interval = "predict"))
-
-lines(df_xy_pred_int$lwr ~ df_xxx$xxx, col = 'grey', lwd = 1, lty = 2)
-lines(df_xy_pred_int$upr ~ df_xxx$xxx, col = 'grey', lwd = 1, lty = 2)
-
-abline(h = 0.3, col = "red")
-
-
-# ... zoom in on upper pred interval
-
-plot(df_xy$yyy ~ df_xy$xxx,
-	 col = 'blue',
-	 pch = 1,
-	 xlim = c(-2, 0),
-	 ylim = c(0.25, 0.35)
-	 )
-
-abline(v = seq(-2, 14, 0.2), col = "gray", lty = 3)
-
-polygon(c(df_xy$xxx, rev(df_xy$xxx)),
-		c(df_xy_conf_int$lwr, rev(df_xy_conf_int$upr)),col="lightgrey")
-
-lines(fit_all$fitted.values ~ df_xy$xxx, col = 'black', lwd = 4, lty = 3)
-
-lines(df_xy_conf_int$lwr ~ df_xy$xxx, col = 'black', lwd = 1)
-lines(df_xy_conf_int$upr ~ df_xy$xxx, col = 'black', lwd = 1)
-
-points(df_xy$yyy ~ df_xy$xxx, col = 'blue', pch = 1, ylim = c(0, 0.6))
-
-df_xy_pred_int <- as.data.frame(predict(fit_all, df_xxx, interval = "predict"))
-
-lines(df_xy_pred_int$lwr ~ df_xxx$xxx, col = 'grey', lwd = 1, lty = 2)
-lines(df_xy_pred_int$upr ~ df_xxx$xxx, col = 'grey', lwd = 1, lty = 2)
-
-abline(h = 0.3, col = "red")
-
-# ... zoom in on lower pred interval
-
-plot(df_xy$yyy ~ df_xy$xxx,
-	 col = 'blue',
-	 pch = 1,
-	 xlim = c(10, 14),
-	 ylim = c(0.25, 0.35)
-	 )
-
-abline(v = seq(-2, 14, 0.2), col = "gray", lty = 3)
-
-polygon(c(df_xy$xxx, rev(df_xy$xxx)),
-		c(df_xy_conf_int$lwr, rev(df_xy_conf_int$upr)),col="lightgrey")
-
-lines(fit_all$fitted.values ~ df_xy$xxx, col = 'black', lwd = 4, lty = 3)
-
-lines(df_xy_conf_int$lwr ~ df_xy$xxx, col = 'black', lwd = 1)
-lines(df_xy_conf_int$upr ~ df_xy$xxx, col = 'black', lwd = 1)
-
-points(df_xy$yyy ~ df_xy$xxx, col = 'blue', pch = 1, ylim = c(0, 0.6))
-
-df_xy_pred_int <- as.data.frame(predict(fit_all, df_xxx, interval = "predict"))
-
-lines(df_xy_pred_int$lwr ~ df_xxx$xxx, col = 'grey', lwd = 1, lty = 2)
-lines(df_xy_pred_int$upr ~ df_xxx$xxx, col = 'grey', lwd = 1, lty = 2)
-
-abline(h = 0.3, col = "red")
-
-# ... zoom in on confidence interval
-
-plot(df_xy$yyy ~ df_xy$xxx,
-	 col = 'blue',
-	 pch = 1,
-	 xlim = c(2, 8),
-	 ylim = c(0.25, 0.35)
-	 )
-
-abline(v = seq(-2, 14, 0.2), col = "gray", lty = 3)
-
-polygon(c(df_xy$xxx, rev(df_xy$xxx)),
-		c(df_xy_conf_int$lwr, rev(df_xy_conf_int$upr)),col="lightgrey")
-
-lines(fit_all$fitted.values ~ df_xy$xxx, col = 'black', lwd = 4, lty = 3)
-
-lines(df_xy_conf_int$lwr ~ df_xy$xxx, col = 'black', lwd = 1)
-lines(df_xy_conf_int$upr ~ df_xy$xxx, col = 'black', lwd = 1)
-
-points(df_xy$yyy ~ df_xy$xxx, col = 'blue', pch = 1, ylim = c(0, 0.6))
-
-df_xy_pred_int <- as.data.frame(predict(fit_all, df_xxx, interval = "predict"))
-
-lines(df_xy_pred_int$lwr ~ df_xxx$xxx, col = 'grey', lwd = 1, lty = 2)
-lines(df_xy_pred_int$upr ~ df_xxx$xxx, col = 'grey', lwd = 1, lty = 2)
-
-abline(h = 0.3, col = "red")
-```
-
-### The calibration estimates based on graphical inspection are as follows :  
-
-* calibration interval for the __mean__  response of 0.3  = (4, 7.6)  
-* calibration interval for __single point__ response of 0.3 = (-1.4, 13.2)  
-
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-  
-__ix. Find the same calibration intervals analytically using the SE equations given in class and in the book (Version 3 page 194).__    
-
-```{r}
-
-y_est <- 0.3
-x_at_y_est <- (y_est - b0) / b1
-
-x_at_y_est
-
-se_at_y_est <- predict(fit_all, data.frame(xxx = x_at_y_est), se.fit = TRUE)
-
-se_ci_at_y_est <- se_at_y_est$se.fit / abs(b1)
-
-alpha <- 0.05
-dof <- dim(df_xy)[1] - 2
-crit_value <- qt(1 - alpha/2, dim(df_xy)[1] - 2)
-
-cal_est_at_y_est_upr <- x_at_y_est + crit_value * se_ci_at_y_est
-cal_est_at_y_est_lwr <- x_at_y_est - crit_value * se_ci_at_y_est
-
-
-# ...	calibration of predicted value
-
-res_std_dev <- sigma(fit_all) * sigma(fit_all)
-
-se_pi_at_y_est <- (sqrt (res_std_dev + se_at_y_est$se.fit * se_at_y_est$se.fit) ) / abs(b1)
-
-cal_pi_est_at_y_est_upr <- x_at_y_est + crit_value * se_pi_at_y_est
-cal_pi_est_at_y_est_lwr <- x_at_y_est - crit_value * se_pi_at_y_est
-
-
-```
-
-### The calibration estimates are as follows :  
-
-* calibration interval for the __mean__  response of 0.3 = (`r cal_est_at_y_est_lwr`, `r cal_est_at_y_est_upr`)  
-* calibration interval for __single point__ response of 0.3 = (`r cal_pi_est_at_y_est_lwr`, `r cal_pi_est_at_y_est_upr`)  
-
 
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-  
 __x. A scatterplot of residuals.    Please do in SAS and R!__  
@@ -418,7 +251,7 @@ plot(df_xy$xxx, yyy_res,
 	 col = "blue",
 	 ylab="Residuals",
 	 xlab="Stone xxx", 
-     main="Black Wheatears - Residual Plot") 
+     main="Metabolism - Residual Plot") 
 abline(0, 0)
 
 ```
@@ -437,7 +270,7 @@ res_std <- sqrt(var(yyy_res))
 hist(yyy_res, density=20, breaks = 10, prob = TRUE, 
      xlab="Stone xxx",
 #	 ylim=c(0, 10), 
-     main="Black Wheatears - Residuals")
+     main="Metabolism - Residuals")
 curve(dnorm(x, mean = res_mean, sd = res_std),
 	  col = "darkblue",
 	  lwd = 2,
