@@ -25,7 +25,6 @@ data_dir <- "./data"
 setwd(data_dir)
 
 s26 <- read.csv("ex0826.csv", stringsAsFactors = FALSE)
-s29 <- read.csv("ex0829.csv", stringsAsFactors = FALSE)
 
 setwd(home_dir)
 
