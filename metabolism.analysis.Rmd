@@ -35,10 +35,11 @@ str(s26)
 plot(s26$Metab ~ s26$Mass)
 plot(s26$Metab ~ s26$m34, log = "x")
 plot(s26$Metab ~ s26$m34, xlim=c(0,100))
+plot(s26$Metab ~ s26$m34)
 
 # ... define data set to analyze 
 
-df_xy <- data.frame(s26$Metab, s26$m34)
+df_xy <- data.frame(s26$m34, s26$Metab)
 names(df_xy) <- c("xxx", "yyy")
 
 str(df_xy)
@@ -168,7 +169,6 @@ print_cnf_intrvl <- paste0(sprintf("(%9.3f", cnf_intrvl_lwr), sprintf(", %9.3f)"
 4 : p_value = `r p_value` < 0.05 ?    
 5: `r acc_rej`  
 6 : There `r is_is_not` sufficient evidence to suggest at the alpha = `r alpha` level of significance (p-value = `r p_value`) that the intercept of the regression line that estimates the T cell for Metabolism based on the xxx of the birds is not equal to zero. A `r (1 - alpha)*100`% confidence interval for the slope is `r print_cnf_intrvl`, which is an interval that `r does_does_not` contain the value zero  
-  
 
 
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-  
@@ -205,7 +205,6 @@ cnf_intrvl_upr <- cnf_intrvl[1,3]
 print_cnf_intrvl <- paste0(sprintf("(%9.3f", cnf_intrvl_lwr), sprintf(", %9.3f)", cnf_intrvl_upr))
 
 ```
-
 
 
 The confidence interval is the upper and lower bound for the expected mean value at the given indpendent value (e.g., xxx = 4.5 grams) for the current regression relationship.
@@ -281,5 +280,243 @@ And the SAS plots ...
 
 
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-  
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-  
+Second Model- Remove high leverage point
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-  
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-  
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-  
+
+#### b. Analyze the data providing at least the following:    
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-  
+__i. A Scatterplot with confidence intervals of the regression line and prediction intervals of the regression line.  Please do in SAS and R!__    
+```{r, echo = FALSE}
+
+df_xy <- df_xy[df_xy$xxx < 300,]
+
+fit_all <- lm(yyy ~ xxx, data = df_xy)
+
+df_xy_conf_int <- as.data.frame(predict(fit_all, df_xy , interval = "confidence"))
+
+plot(df_xy$yyy ~ df_xy$xxx, col = 'blue', pch = 19)
+polygon(c(df_xy$xxx, rev(df_xy$xxx)),
+		c(df_xy_conf_int$lwr, rev(df_xy_conf_int$upr)),col="lightgrey")
+
+lines(fit_all$fitted.values ~ df_xy$xxx, col = 'black', lwd = 4, lty = 3)
+
+lines(df_xy_conf_int$lwr ~ df_xy$xxx, col = 'black', lwd = 1)
+lines(df_xy_conf_int$upr ~ df_xy$xxx, col = 'black', lwd = 1)
+
+points(df_xy$yyy ~ df_xy$xxx, col = 'blue', pch = 19)
+
+df_xy_pred_int <- as.data.frame(predict(fit_all, df_xy, interval = "predict"))
+
+lines(df_xy_pred_int$lwr ~ df_xy$xxx, col = 'grey', lwd = 1, lty = 2)
+lines(df_xy_pred_int$upr ~ df_xy$xxx, col = 'grey', lwd = 1, lty = 2)
+
+```
+
+And the SAS plot ...
+
+  
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-  
+__ii. A table showing the t-statistics and pvalues for the significance of the regression parameters: .   Please do in SAS and R!__  
+
+```{r, echo=FALSE}
+
+summary(fit_all)
+
+```
+
+And the SAS table ...
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-  
+__iii. Using the data in ii show all 6 steps of each hypothesis test.__   
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-  
+
+##### __Six-Step Hypothesis Test - Slope__   
+
+``` {r, echo = FALSE}
+
+alpha <- 0.05
+dof <- dim(df_xy)[1] - 2
+crit_value <- qt(1 - alpha/2, dim(df_xy)[1] - 2)
+
+t_value <- coef(summary(fit_all))["xxx","t value"]
+p_value <- coef(summary(fit_all))["xxx","Pr(>|t|)"]
+
+if (p_value < alpha)
+{
+	acc_rej <- "Reject Ho"
+	is_is_not <- "is"
+	does_does_not <- "does not"
+} else {
+	acc_rej <- "Do not Reject Ho"
+	is_is_not <- "is not"
+	does_does_not <- "does"
+}
+
+cnf_intrvl <- confint(fit_all, 'xxx', level = 1 - alpha)
+cnf_intrvl_lwr <- cnf_intrvl[1,1]
+cnf_intrvl_upr <- cnf_intrvl[1,2]
+
+print_cnf_intrvl <- paste0(sprintf("(%9.3f", cnf_intrvl_lwr), sprintf(", %9.3f)", cnf_intrvl_upr))
+
+```
+
+1: Ho : b1 = 0; Ha ; b1 != 0  
+2 : Critical Value : t(0.975, df = __`r dof `__) = +/- __`r crit_value`__   
+3 : t = `r t_value `    
+4 : p_value = `r p_value` < 0.05 ?    
+5: `r acc_rej`  
+6 : There `r is_is_not` sufficient evidence to suggest at the alpha = `r alpha` level of significance (p-value = `r p_value`) that the slope of the regression line that estimates the T cell for Metabolism based on the xxx of the birds `r is_is_not` equal to zero. A `r (1 - alpha)*100`% confidence interval for the slope is `r print_cnf_intrvl`, which is an interval that `r does_does_not` contain the value zero  
+  
+
+##### __Six-Step Hypothesis Test - Intercept__   
+
+``` {r, echo = FALSE}
+
+alpha <- 0.05
+dof <- dim(df_xy)[1] - 2
+crit_value <- qt(1 - alpha/2, dim(df_xy)[1] - 2)
+
+t_value <- coef(summary(fit_all))["(Intercept)","t value"]
+p_value <- coef(summary(fit_all))["(Intercept)","Pr(>|t|)"]
+
+if (p_value < alpha)
+{
+	acc_rej <- "Reject Ho"
+	is_is_not <- "is"
+	does_does_not <- "does not"
+} else {
+	acc_rej <- "Do not Reject Ho"
+	is_is_not <- "is not"
+	does_does_not <- "does"
+}
+
+cnf_intrvl <- confint(fit_all, '(Intercept)', level = 1 - alpha)
+cnf_intrvl_lwr <- cnf_intrvl[1,1]
+cnf_intrvl_upr <- cnf_intrvl[1,2]
+
+print_cnf_intrvl <- paste0(sprintf("(%9.3f", cnf_intrvl_lwr), sprintf(", %9.3f)", cnf_intrvl_upr))
+
+```
+
+1 : Ho : b0 = 0; Ha ; b0 != 0  
+2 : Critical Value : t(0.975, df = __`r dof `__) = +/- __`r crit_value`__   
+3 : t = `r t_value `    
+4 : p_value = `r p_value` < 0.05 ?    
+5: `r acc_rej`  
+6 : There `r is_is_not` sufficient evidence to suggest at the alpha = `r alpha` level of significance (p-value = `r p_value`) that the intercept of the regression line that estimates the T cell for Metabolism based on the xxx of the birds is not equal to zero. A `r (1 - alpha)*100`% confidence interval for the slope is `r print_cnf_intrvl`, which is an interval that `r does_does_not` contain the value zero  
+
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-  
+__iv. The regression equation.__    
+
+
+``` {r, echo = FALSE}
+
+b0 <- fit_all$coefficients[1]
+b1 <- fit_all$coefficients[2]
+
+```
+
+The Regression equation : 
+* yyy = `r b1` * xxx + `r b0`
+
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-  
+__v. Interpretation of the slope and intercept in the model (regression equation.)__   
+
+##### The slope represents the rate of change in yyy estimated for a unit change in stone xxx transported by this populations of birds sampled. I.e., for each increase in 1 gram of stone xxx there is a corresponding increase in yyy count of `r b1` 
+
+##### The intercept represents the estimated average level of yyy counts associated to a transported stone xxx of 0 grams by this population of birds. From a practical point of view, since each bird evalauted did actually transport stones of some xxx, the intercept provides an estimate of the lower bound of yyy counts in this population of birds.
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-  
+__vi. Find and interpret the 95% confidence interval for the mean t-cell response conditional on a stone xxx of 4.5 grams.  Please do in SAS and R!__  
+
+``` {r, echo = FALSE} 
+
+cnf_intrvl <- predict(fit_all, data.frame(xxx = 4.5) , interval = "confidence")
+cnf_intrvl_lwr <- cnf_intrvl[1,2]
+cnf_intrvl_upr <- cnf_intrvl[1,3]
+
+print_cnf_intrvl <- paste0(sprintf("(%9.3f", cnf_intrvl_lwr), sprintf(", %9.3f)", cnf_intrvl_upr))
+
+```
+
+
+The confidence interval is the upper and lower bound for the expected mean value at the given indpendent value (e.g., xxx = 4.5 grams) for the current regression relationship.
+
+For this particular regression, the confidence interval at stone xxx = 4.5 : yyy count in the range `r print_cnf_intrvl`
+  
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-  
+__vii. Find and interpret the 95% prediction interval for the predicted t-cell response given a stone xxx of 4.5 grams.   Please do in SAS and R!__  
+
+
+``` {r, echo = FALSE} 
+
+prd_intrvl <- predict(fit_all, data.frame(xxx = 4.5) , interval = "predict")
+prd_intrvl_lwr <- prd_intrvl[1,2]
+prd_intrvl_upr <- prd_intrvl[1,3]
+
+print_prd_intrvl <- paste0(sprintf("(%9.3f", prd_intrvl_lwr), sprintf(", %9.3f)", prd_intrvl_upr))
+
+```
+
+
+The prediction interval is the upper and lower bound for an 'next' observation of dependent value at the given independent value, based on the current regression relationshhip. That is to say, for an observation of xxx and yyy not included in this analysis, the prediction interval bounds the range of future observations that are expected.  
+
+For this particular case, the prediction interval at stone xxx = 4.5 : yyy count in the range `r print_prd_intrvl`
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-  
+
+__And the SAS table__ ...  
+
+
+
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-  
+__x. A scatterplot of residuals.    Please do in SAS and R!__  
+
+``` {r, echo = FALSE}
+
+yyy_res = resid(fit_all)
+
+plot(df_xy$xxx, yyy_res, 
+     pch = 19,
+	 col = "blue",
+	 ylab="Residuals",
+	 xlab="Stone xxx", 
+     main="Metabolism - Residual Plot") 
+abline(0, 0)
+
+```
+
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-  
+__xi. A histogram of residuals with normal distribution superimposed.  (from SAS).__    
+
+
+``` {r, echo = FALSE}
+
+res_mean <- mean(yyy_res)
+res_std <- sqrt(var(yyy_res))
+
+hist(yyy_res, density=20, breaks = 10, prob = TRUE, 
+     xlab="Stone xxx",
+#	 ylim=c(0, 10), 
+     main="Metabolism - Residuals")
+curve(dnorm(x, mean = res_mean, sd = res_std),
+	  col = "darkblue",
+	  lwd = 2,
+	  add = TRUE,
+	  yaxt = "n")
+
+```
+
+And the SAS plots ...
+
+
 
   
