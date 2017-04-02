@@ -147,11 +147,13 @@ p_value <- coef(summary(fit_all))["log_mass_75","Pr(>|t|)"]
 if (p_value < alpha)
 {
 	acc_rej <- "Reject Ho"
-	is_is_not <- "is"
+	is_is_not_1 <- "is"
+	is_is_not_2 <- "is not"
 	does_does_not <- "does not"
 } else {
 	acc_rej <- "Do not Reject Ho"
-	is_is_not <- "is not"
+	is_is_not_1 <- "is not"
+	is_is_not_2 <- "is"
 	does_does_not <- "does"
 }
 
@@ -168,7 +170,7 @@ print_cnf_intrvl <- paste0(sprintf("(%9.3f", cnf_intrvl_lwr), sprintf(", %9.3f)"
 3 : t = `r t_value `    
 4 : p_value = `r p_value` < 0.05 ?    
 5: `r acc_rej`  
-6 : There `r is_is_not` sufficient evidence to suggest at the alpha = `r alpha` level of significance (p-value = `r p_value`) that the slope of the regression line that estimates the T cell for Metabolism based on the log_mass_75 of the birds `r is_is_not` equal to zero. A `r (1 - alpha)*100`% confidence interval for the slope is `r print_cnf_intrvl`, which is an interval that `r does_does_not` contain the value zero  
+6 : There `r is_is_not_1` sufficient evidence to suggest at the alpha = `r alpha` level of significance (p-value = `r p_value`) that the slope of the regression line that estimates the Metabolic Rate based on the log(Mass^3/4) of the mammals `r is_is_not_2` equal to zero. A `r (1 - alpha)*100`% confidence interval for the slope is `r print_cnf_intrvl`, which is an interval that `r does_does_not` contain the value zero  
   
 
 ##### __Six-Step Hypothesis Test - Intercept__   
@@ -185,11 +187,13 @@ p_value <- coef(summary(fit_all))["(Intercept)","Pr(>|t|)"]
 if (p_value < alpha)
 {
 	acc_rej <- "Reject Ho"
-	is_is_not <- "is"
+	is_is_not_1 <- "is"
+	is_is_not_2 <- "is not"
 	does_does_not <- "does not"
 } else {
 	acc_rej <- "Do not Reject Ho"
-	is_is_not <- "is not"
+	is_is_not_1 <- "is not"
+	is_is_not_2 <- "is"
 	does_does_not <- "does"
 }
 
@@ -206,7 +210,7 @@ print_cnf_intrvl <- paste0(sprintf("(%9.3f", cnf_intrvl_lwr), sprintf(", %9.3f)"
 3 : t = `r t_value `    
 4 : p_value = `r p_value` < 0.05 ?    
 5: `r acc_rej`  
-6 : There `r is_is_not` sufficient evidence to suggest at the alpha = `r alpha` level of significance (p-value = `r p_value`) that the intercept of the regression line that estimates the T cell for Metabolism based on the log_mass_75 of the birds is not equal to zero. A `r (1 - alpha)*100`% confidence interval for the slope is `r print_cnf_intrvl`, which is an interval that `r does_does_not` contain the value zero  
+6 : There `r is_is_not_1` sufficient evidence to suggest at the alpha = `r alpha` level of significance (p-value = `r p_value`) that the intercept of the regression line that estimates the Metabolic Ratebased on the log(Mass^3/4) of the mammals `r is_is_not_2` equal to zero. A `r (1 - alpha)*100`% confidence interval for the slope is `r print_cnf_intrvl`, which is an interval that `r does_does_not` contain the value zero  
 
 
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-  
