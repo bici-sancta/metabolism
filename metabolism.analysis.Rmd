@@ -42,7 +42,7 @@ s26$log_metab <- log(s26$Metab)
 ```
 
 
-### __Strucutre of Data Set (with added columns for log transforms)__  
+### __Structure of Data Set (with added columns for log transforms)__  
 
 ```{r}
 
@@ -67,7 +67,9 @@ plot(s26$Metab ~ s26$Mass, log = "xy",
 	 ylab = "log(Metabolic Rate)")
 ```
 
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-  
 ##### Since the base question is to evaluate if the data set is consistent with Kleiber's law, an additional transformation is included to raise the Mass to the 3/4 power. This data plot shows similar apparently normal distributions in both x and y axes, and sufficiently linear to proceed with the regression analysis with the data transformed in this manner.
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-  
 
 ```{r}
 plot(s26$Metab ~ s26$m34, log = "xy",
@@ -87,10 +89,10 @@ str(df_xy)
 
 ### Homework 11 - Problem Set 1 - Metabolism
 
-#### b. Analyze the data providing at least the following:    
-
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-  
-__i. A Scatterplot with confidence intervals of the regression line and prediction intervals of the regression line.  Please do in SAS and R!__    
+### __i. A Scatterplot with confidence intervals of the regression line and prediction intervals of the regression line.  Please do in SAS and R!__    
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-  
+
 ```{r, echo = FALSE}
 
 
@@ -122,7 +124,9 @@ And the SAS plot ...
 
 
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-  
-__ii. A table showing the t-statistics and pvalues for the significance of the regression parameters: .   Please do in SAS and R!__  
+### __ii. A table showing the t-statistics and pvalues for the significance of the regression parameters: .   Please do in SAS and R!__  
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-  
+
 
 ```{r plot, echo=FALSE}
 
@@ -221,8 +225,8 @@ print_cnf_intrvl <- paste0(sprintf("(%9.3f", cnf_intrvl_lwr), sprintf(", %9.3f)"
 
 
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-  
-__iv. The regression equation.__    
-
+### __iv. The regression equation.__    
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-  
 
 ``` {r, echo = FALSE}
 
@@ -236,7 +240,8 @@ The Regression equation :
 
 
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-  
-__v. Interpretation of the slope and intercept in the model (regression equation.)__   
+### __v. Interpretation of the slope and intercept in the model (regression equation.)__   
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-  
 
 ##### The slope represents the rate of change in log_metab estimated for a unit change in stone log_mass_75 transported by this populations of birds sampled. I.e., for each increase in 1 gram of stone log_mass_75 there is a corresponding increase in log_metab count of `r b1` 
 
@@ -257,17 +262,18 @@ Therefore, the relationship can be expressed as :
 Metabolic Rate = `r exp(b0)` * x ^ (`r x_exp * b1`)  
   
   
-  To interpret the meaning of the slope in different terms, for every doubling of the mass of the mammal species, the associated increase in metabolic rate = 2 ^ `r x_exp * b1`, or in other words, `r 2^(x_exp * b1)`  
+ #### __To interpret the meaning of the slope in different terms, for every doubling of the mass of the mammal species, the associated increase in metabolic rate = 2 ^ `r x_exp * b1`, or in other words, `r 2^(x_exp * b1)`__  
   
-  To interpret the meaning of the intercept in different terms, at the base level for a small species, e.g., mass = 1, the base metabolic rate for all species is expected at a level of `r exp(b0)`  
+#### __To interpret the meaning of the intercept in different terms, at the base level for a small species, e.g., mass = 1, the base metabolic rate for all species is expected at a level of `r exp(b0)`__  
 
 
-##### The intercept represents the estimated average level of log_metab counts associated to a transported stone log_mass_75 of 0 grams by this population of birds. From a practical point of view, since each bird evalauted did actually transport stones of some log_mass_75, the intercept provides an estimate of the lower bound of log_metab counts in this population of birds.
-
+#### __The intercept represents the estimated average level of log_metab counts associated to a transported stone log_mass_75 of 0 grams by this population of birds. From a practical point of view, since each bird evalauted did actually transport stones of some log_mass_75, the intercept provides an estimate of the lower bound of log_metab counts in this population of birds.__  
 
 
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-  
-__x. A scatterplot of residuals.    Please do in SAS and R!__  
+__x. A scatterplot of residuals.    Please do in SAS and R__  
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-  
+
 
 ``` {r, echo = FALSE}
 
@@ -285,8 +291,8 @@ abline(0, 0)
 
 
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-  
-__xi. A histogram of residuals with normal distribution superimposed__    
-
+### __xi. A histogram of residuals with normal distribution superimposed__    
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-  
 
 ``` {r, echo = FALSE}
 
@@ -311,8 +317,18 @@ And the SAS plots ...
 
 ![SAS - Distribution of Residuals](sas_resid_distr.png)
 
-__xii. Provide a measure of the amount of variation in the response that is accounted for by the explanatory variable.  Interpret this measure clearly indicating the units of the response and the explanatory variables.__  
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-  
+
+### __xii. Provide a measure of the amount of variation in the response that is accounted for by the explanatory variable.  Interpret this measure clearly indicating the units of the response and the explanatory variables.__  
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-  
+
 
 ```{r}
 r2 <- summary.lm(fit_all, r.squared=TRUE)$r.squared
+r2_format <- sprintf("%8.2f %%", r2*100)
+non_r2_format <- sprintf("%8.2f %%", (1.0 - r2)*100)
 ```
+
+#### R-squared value for model = `r r2`
+
+#### Therefore, `r r2_format` of the variation observed in the dependent variable (log(Metabolism) is explained by the log(mass^3/4) independent variable, leaving only `r non_r2_format` variation that is available to be explained by any remaining contributory factors.
